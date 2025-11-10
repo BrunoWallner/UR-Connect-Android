@@ -1,0 +1,21 @@
+[package]
+name = "ur-connect-jni"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ur-connect = { git = "https://github.com/BrunoWallner/ur-connect", rev = "2206d1fe1a72a0ae9dc789e642bb598dd740483c" }
+# ur-connect = { path = "/home/luca/git/ur-connect" }
+jni = { version = "0.21.1", default-features = false }
+lazy_static = "1.5.0"
+tokio = { version = "1.48.0", default-features = false, features = ["rt-multi-thread"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+panic = "abort"
+codegen-units = 1    
+strip = "symbols"    
