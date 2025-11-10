@@ -75,7 +75,6 @@ fun LoginForm(
             when (res) {
                 Backend.LoginResult.SUCCESS -> {
                     loginStatus = "success"
-                    // credentials.save(Credentials.Login(name, password))
                     correctLogin = Credentials.Login(name, passwd = password)
 
                 }
