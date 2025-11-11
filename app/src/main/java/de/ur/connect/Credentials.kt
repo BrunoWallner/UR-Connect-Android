@@ -43,7 +43,6 @@ class Credentials(private val activity: Activity) {
         }
     }
 
-    /** Save a new login into Credential Manager */
     public suspend fun save(login: Login) {
         val request = CreatePasswordRequest(
             login.name,

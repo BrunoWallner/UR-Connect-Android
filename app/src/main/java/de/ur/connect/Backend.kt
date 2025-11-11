@@ -1,5 +1,8 @@
 package de.ur.connect
 
+import android.annotation.SuppressLint
+import kotlinx.serialization.Serializable
+
 class Backend {
     companion object {
         init {
@@ -7,6 +10,8 @@ class Backend {
         }
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
+    @Serializable
     data class TimeTableEntry(
         val date: String,
         val time: String,

@@ -1,3 +1,4 @@
+package de.ur.connect
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
