@@ -48,9 +48,11 @@ class Credentials(private val activity: Activity) {
             login.name,
             login.passwd
         )
-        credentialManager.createCredential(
-            context = activity,
-            request = request
-        )
+        try {
+            credentialManager.createCredential(
+                context = activity,
+                request = request
+            )
+        } catch (_: Throwable) {}
     }
 }

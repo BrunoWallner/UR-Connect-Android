@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
@@ -26,6 +28,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -70,9 +73,13 @@ fun TimeTablePage(viewModel: MainViewModel) {
         }
     ) {
         Scaffold(
+            containerColor = Color.Black,
             topBar = {
                 TopAppBar(
                     title = { Text("Time table") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Black // <-- makes top app bar black
+                    ),
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {
@@ -92,14 +99,12 @@ fun TimeTablePage(viewModel: MainViewModel) {
             }
         }
     }
-
-    // TimeTablePager(viewModel)
 }
 
 @Composable
 private fun TimeTablePager(viewModel: MainViewModel) {
     var currentPage by remember { mutableStateOf(0) }
-    val pageCount: () -> Int = { -> min(currentPage + 4, 256) }
+    val pageCount: () -> Int = { -> min(currentPage + 10, 256) }
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0.0f,
@@ -141,12 +146,11 @@ private fun TimeTablePager(viewModel: MainViewModel) {
             }
         }
 
-        // bottom bar / row (automatically aligned bottom center by Box)
+        // bottom navigation buttons
         Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(onClick = {
                 scope.launch {
@@ -179,11 +183,13 @@ fun DayPage(timeTable: List<Backend.TimeTableEntry>, dayOffset: Long) {
     val dayOfWeek = getDayOfWeek(currentDate)
     val table = buildTimeTable(timeTable, currentDate)
 
-    // Center everything horizontally with a max width
+    val scrollState = rememberScrollState()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxHeight()
+            .verticalScroll(scrollState)
             .widthIn(max = 500.dp)  // maximum width of page
             .padding(horizontal = 0.dp)
     ) {
@@ -196,8 +202,7 @@ fun DayPage(timeTable: List<Backend.TimeTableEntry>, dayOffset: Long) {
         // Table content
         for ((time, entries) in table) {
             Column(
-                modifier = Modifier.fillMaxWidth(), // You can remove fillMaxWidth to shrink row
-                // horizontalArrangement = Arrangement.Start
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Spacer(Modifier.height(30.dp))
                 Text(
@@ -219,6 +224,7 @@ fun DayPage(timeTable: List<Backend.TimeTableEntry>, dayOffset: Long) {
                 }
             }
         }
+        Spacer(Modifier.height(60.dp)) // makes it possible to scroll further
     }
 }
 

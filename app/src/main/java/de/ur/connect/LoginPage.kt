@@ -75,7 +75,6 @@ fun LoginForm(
             isLoading = false
             when (res) {
                 Backend.LoginResult.SUCCESS -> {
-                    loginStatus = "success"
                     correctLogin = Credentials.Login(name, passwd = password)
 
                 }
@@ -93,8 +92,6 @@ fun LoginForm(
         if (login != null) {
             loggedInViaCredentials = true
             handleLogin(login.name, login.passwd)
-        } else {
-            loginStatus = "could not get password from password manager"
         }
     }
 
@@ -104,6 +101,10 @@ fun LoginForm(
             .padding(16.dp),
     ) {
         Spacer(Modifier.height(128.dp))
+
+        Text(text = "Please login with your RZ-Account", color = Color.White)
+
+        Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = name,

@@ -31,7 +31,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
-    val context = baseContext
     val credentials = Credentials(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,29 +54,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Pages(viewModel: MainViewModel, credentials: Credentials) {
     val context = LocalContext.current
-    if (viewModel.loggedIn && !viewModel.tableUpdated) {
-        LaunchedEffect(Unit) {
+
+    // Fetch timetable if logged in and not updated
+    if (viewModel.loggedIn) {
+        LaunchedEffect(viewModel.loggedIn, viewModel.tableUpdated) {
+            if (viewModel.tableUpdated) return@LaunchedEffect
+            android.util.Log.e("Bruno", "updating timetable")
             val table = withContext(Dispatchers.IO) {
                 viewModel.backend.getTimeTable()
             }
             viewModel.timeTable = table ?: listOf()
             Storage().saveTimeTable(context as Activity, viewModel.timeTable)
+            viewModel.tableUpdated = true
         }
     }
+
     if (!viewModel.loggedIn && !viewModel.tableUpdated) {
-        LoginPage(onLoginSuccess = { viewModel.loggedIn = true }, viewModel.backend, credentials)
+        LoginPage(onLoginSuccess = {viewModel.loggedIn = true}, viewModel.backend, credentials)
     } else {
-        if (viewModel.loggedIn) {
-            LaunchedEffect(Unit) {
-                val table = withContext(Dispatchers.IO) {
-                    viewModel.backend.getTimeTable()
-                }
-                viewModel.timeTable = table ?: listOf()
-                Storage().saveTimeTable(context as Activity, viewModel.timeTable)
-            }
-        }
         TimeTablePage(viewModel)
     }
+
 }
 
 
