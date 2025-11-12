@@ -1,5 +1,5 @@
 # UR-Connect
-Android client for [UR-Connect](https://github.com/julian-baumann/ur-connect)
+Android client for UR-Connect
 
 At the moment, only a simple timetable view is supported.
 
